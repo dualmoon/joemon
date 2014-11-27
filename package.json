@@ -24,6 +24,6 @@
   ],
   "homepage": "https://github.com/dualmoon/jo-mon",
   "dependencies": {
-    "request": "^2.48.0"
+    "http-sync": "0.0.5",
   }
 }
