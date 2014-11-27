@@ -1,4 +1,5 @@
-Request = require 'request'
+## PokeAPI wrapper ##
+
 HttpSync = require 'http-sync'
 
 class Pokemon
@@ -14,7 +15,7 @@ class Pokemon
       path: "#{@basePath}/#{kind}/#{id}/"
     request = HttpSync.request options
     response = request.end()
-    return {status: response.statusCode, body: response.body.toString()}
+    return {status: response.statusCode, body: JSON.parse response.body.toString()}
     
     #Request.get "#{@uri}/#{kind}/#{id}/", (err, res, body) =>
       #if not err and res.statusCode is 200
@@ -22,7 +23,7 @@ class Pokemon
       #else
         #callback null, err
 
-  return #descrip: get the entire pokede
+  #descrip: get the entire pokede
   #params : none
   #returns: name - the pokedex name e.g. National.
   ##        resource_uri - the uri of this resource.

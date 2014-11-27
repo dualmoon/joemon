@@ -1,29 +1,43 @@
 {
+
   "name": "joemon",
+
   "author": "Ashley Luna <luna@airsi.de>",
+
   "description": "Joémon: the Node.js pokeapi.co wrapper",
-  "version": "0.0.1",
-  "maintainers": [
-    {
-      "name": "Ashley Luna",
-      "email": "luna@airsi.de"
-    }
-  ],
+
+  "version": "0.0.3",
+
+  "main": "joemon.coffee",
+
   "bugs": {
-    "url": "https://github.com/dualmoon/jo-mon/issues"
+
+    "url": "https://github.com/dualmoon/joemon/issues"
+
   },
+
   "repository": {
+
     "type": "git",
-    "url": "gits://github.com/dualmoon/jo-mon.git"
+
+    "url": "gits://github.com/dualmoon/joemon.git"
+
   },
-  "licenses": [
-    {
-      "name": "GPL-3.0",
-      "url": "http://opensource.org/licenses/GPL-3.0"
-    }
-  ],
-  "homepage": "https://github.com/dualmoon/jo-mon",
+
+  "license": {
+
+    "name": "GPL-3.0",
+
+    "url": "http://opensource.org/licenses/GPL-3.0"
+
+  },
+
+  "homepage": "https://github.com/dualmoon/joemon",
+
   "dependencies": {
-    "http-sync": "0.0.5",
+
+    "http-sync": "0.0.5"
+
   }
+
 }
