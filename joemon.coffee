@@ -96,7 +96,7 @@ class Pokemon
   #descrip: gets multiple pokemon moves
   #params : limit - the number of moves to get per call
   getMoves: (limit=5) ->
-    return @sendAPIrequest 'move', '', limit
+    return @sendAPIrequest 'move', false, limit
 
   #descrip: gets a single pokemon ability
   #params :
