@@ -11,11 +11,13 @@ class Pokemon
   sendAPIrequest: (kind, id, callback, param1 = false) ->
     #pString = #{param:val} for key:value in params
     paramString = ''
+    idString = ''
+    if id then idString = "#{id}/"
     if param1
       paramString = "?#{param1.key}=#{param1.val}"
     options=
       host: @host
-      path: "#{@basePath}/#{kind}/#{id}/#{paramString}"
+      path: "#{@basePath}/#{kind}/#{idString}#{paramString}"
     request = HttpSync.request options
     response = request.end()
     return {status: response.statusCode, body: JSON.parse response.body.toString()}
@@ -93,8 +95,8 @@ class Pokemon
     return @sendAPIrequest 'move', id
   #descrip: gets multiple pokemon moves
   #params : limit - the number of moves to get per call
-  getMoves: (id, limit=5) ->
-    return @sendAPIrequest 'move', id, limit
+  getMoves: (limit=5) ->
+    return @sendAPIrequest 'move', '', limit
 
   #descrip: gets a single pokemon ability
   #params :
