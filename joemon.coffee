@@ -8,11 +8,14 @@ class Pokemon
     @basePath = '/api/v1'
 
   #make the request and return the result
-  sendAPIrequest: (kind, id, callback, params = false) ->
+  sendAPIrequest: (kind, id, callback, param1 = false) ->
     #pString = #{param:val} for key:value in params
+    paramString = ''
+    if param1
+      paramString = "?#{param1.key}=#{param1.val}"
     options=
       host: @host
-      path: "#{@basePath}/#{kind}/#{id}/"
+      path: "#{@basePath}/#{kind}/#{id}/#{paramString}"
     request = HttpSync.request options
     response = request.end()
     return {status: response.statusCode, body: JSON.parse response.body.toString()}
@@ -88,6 +91,10 @@ class Pokemon
   ##        pp - the pp points of the move.
   getMove: (id) ->
     return @sendAPIrequest 'move', id
+  #descrip: gets multiple pokemon moves
+  #params : limit - the number of moves to get per call
+  getMoves: (id, limit=5) ->
+    return @sendAPIrequest 'move', id, limit
 
   #descrip: gets a single pokemon ability
   #params :
