@@ -8,7 +8,7 @@ class Pokemon
     @basePath = '/api/v1'
 
   #make the request and return the result
-  sendAPIrequest: (kind, id, callback, param1 = false) ->
+  sendAPIrequest: (kind, id, param1 = false) ->
     #pString = #{param:val} for key:value in params
     paramString = ''
     idString = ''
@@ -33,7 +33,7 @@ class Pokemon
   #returns: name - the pokedex name e.g. National.
   ##        resource_uri - the uri of this resource.
   ##        pokemon - a big list of pokemon within this pokedex.
-  getPokedex: (callback) ->
+  getPokedex: () ->
     return @sendAPIrequest 'pokedex', 1
 
   #descrip: gets a single pokemon by ID
@@ -65,7 +65,7 @@ class Pokemon
   ##        weight
   ##        happiness - base happiness for this pokemon.
   ##        male_female_ratio - in the format M / F
-  getPokemon: (id, callback) ->
+  getPokemon: (id) ->
     return @sendAPIrequest 'pokemon', id
 
   #descrip: gets a pokemon element/type and its properties
