@@ -2,7 +2,7 @@
   "name": "joemon",
   "author": "Ashley Luna <luna@airsi.de>",
   "description": "Joémon: the Node.js pokeapi.co wrapper",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "joemon.coffee",
   "bugs": {
     "url": "https://github.com/dualmoon/joemon/issues"
