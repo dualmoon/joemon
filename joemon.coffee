@@ -1,149 +1,133 @@
 ## PokeAPI wrapper ##
 
-HttpSync = require 'http-sync'
+Request = require 'request'
 
 class Pokemon
-  constructor: ->
-    @host = 'pokeapi.co'
-    @basePath = '/api/v1'
+	constructor: ->
+		@host = 'pokeapi.co'
+		@basePath = '/api/v2'
 
-  #make the request and return the result
-  sendAPIrequest: (kind, id, param1 = false) ->
-    #pString = #{param:val} for key:value in params
-    paramString = ''
-    idString = ''
-    if id then idString = "#{id}/"
-    if param1
-      paramString = "?#{param1.key}=#{param1.val}"
-    options=
-      host: @host
-      path: "#{@basePath}/#{kind}/#{idString}#{paramString}"
-    request = HttpSync.request options
-    response = request.end()
-    return {status: response.statusCode, body: JSON.parse response.body.toString()}
-    
-    #Request.get "#{@uri}/#{kind}/#{id}/", (err, res, body) =>
-      #if not err and res.statusCode is 200
-        #callback JSON.parse(body)
-      #else
-        #callback null, err
+	#make the request and return the result
+	sendAPIRequest: (kind, nameOrId, callback, params...) ->
+		if nameOrId then idString = "#{nameOrId}/"
+		if params.length > 0
+			param = params.shift()
+			paramString = "?#{param.key}=#{param.val}"
+			if params.length > 0
+				paramString += "#{p.key}=#{p.val}" for p in params
+		Request "#{@host}/#{kind}/#{idString or ''}#{paramString or ''}", (error, response, body) {
+			switch response.statusCode
+				when 404
+					throw "Invalid object Name or ID!"
+				when 200
+					callback(response.statusCode,body)
+		}
+		
+	#descrip: get the entire pokedex
+	#params : none
+	#returns: name - the pokedex name e.g. National
+	##        id -
+	##        resource_uri - the uri of this resource
+	##        pokemon - a big list of pokemon within this pokedex
+	getPokedex: (nameOrId=1, callback) ->
+		return @sendAPIRequest 'pokedex', nameOrId, callback
 
-  #descrip: get the entire pokede
-  #params : none
-  #returns: name - the pokedex name e.g. National.
-  ##        resource_uri - the uri of this resource.
-  ##        pokemon - a big list of pokemon within this pokedex.
-  getPokedex: () ->
-    return @sendAPIrequest 'pokedex', 1
+	#descrip: gets a single pokemon by ID
+	#params : id - the pokemon's ID (national pokedex number)
+	##        callback - function to execute after getting
+	#returns: name - the resource name e.g. Bulbasaur
+	##        id -
+	##        forms - default form of pokemon and alternates if they exist
+	##        abilities - all possible abilities this pokemon can have
+	##        stats - stats of this pokemon
+	##        weight - how much this pokemon weighs
+	##        moves - all moves this pokemon can learn
+	##        sprites - front and back sprites for male and female variants of this pokemon, as well as shinies
+	##        held_items - all items the pokemon can be found holding
+	##        location_area_encounters - a URI to the possible encounter areas for this pokemon
+	##        height - this pokemon's height
+	##        species - name of this pokemon's species and its species URI
+	##        order -
+	##        game_indicies -
+	##        base_experience - base amount of experience gaines by defeating this pokemon
+	##        types - this pokemon's type(s)
+	getPokemon: (nameOrId, callback) ->
+		return @sendAPIRequest 'pokemon', nameOrId, callback
 
-  #descrip: gets a single pokemon by ID
-  #params : id - the pokemon's ID (national pokedex number)
-  ##        callback - function to execute after getting
-  #returns: name - the resource name e.g. Bulbasaur.
-  ##        national_id - the id of the resource, this is the National pokedex number of the pokemon.
-  ##        resource_uri - the uri of this resource.
-  ##        abilities - the abilities this pokemon can have.
-  ##        egg_groups - the egg groups this pokemon is in.
-  ##        evolutions - the evolutions this pokemon can evolve into.
-  ##        descriptions - the pokedex descriptions this pokemon has.
-  ##        moves - the moves this pokemon can learn.
-  ##        types - the types this pokemon is.
-  ##        catch_rate - this pokemon's catch rate.
-  ##        species
-  ##        hp
-  ##        attack
-  ##        defense
-  ##        sp_atk
-  ##        sp_def
-  ##        speed
-  ##        total - the total of the above attributes.
-  ##        egg_cycles - number of egg cycles needed.
-  ##        ev_yield - the ev yield for this pokemon.
-  ##        exp - the exp yield from this pokemon.
-  ##        growth_rate - the growth rate of this pokemon.
-  ##        height
-  ##        weight
-  ##        happiness - base happiness for this pokemon.
-  ##        male_female_ratio - in the format M / F
-  getPokemon: (id) ->
-    return @sendAPIrequest 'pokemon', id
+	#descrip: gets a pokemon element/type and its properties
+	#params :
+	#returns: name - the resource name e.g. Water
+	##        id - the id of the resource
+	##        damage_relations - object containing types that this type is weak/effective against
+	##        generation - which generation this type was introduced in
+	##        move_damage_class - whether the type is physical or special in relation to damaging moves
+	##        game_indicies - indicies of this type for each game
+	##        moves - all moves of this type
+	##        pokemon - all pokemon of this type
+	##        names - all available localized names for this type
+	getType: (nameOrId, callback) ->
+		return @sendAPIRequest 'type', nameOrId, callback
 
-  #descrip: gets a pokemon element/type and its properties
-  #params :
-  #returns: name - the resource name e.g. Water.
-  ##        id - the id of the resource.
-  ##        resource_uri - the uri of this resource.
-  ##        ineffective - the types this type is ineffective against.
-  ##        no_effect - the types this type has no effect against.
-  ##        resistance - the types this type is resistant to.
-  ##        super_effective - the types this type is super effective against.
-  ##        weakness - the types this type is weak to.
-  getType: (id) ->
-    return @sendAPIrequest 'type', id
+	#descrip: gets a single pokemon move
+	#params :
+	#returns: name - the resource name e.g. Water
+	##        id -
+	##        effect_chance - chance of this move's effect occurring (if any)
+	##        generation - generation this move was introduced
+	##        stat_changes -
+	##        effect_changes -
+	##        names - available localized names for this move
+	##        machines - what TM/HM teaches this move, if any
+	##        pp -
+	##        contest_combos -
+	##        effect_entries -
+	##        contest_type -
+	##        contest_effect -
+	##        type - this move's type
+	##        accuracy -
+	##        power -
+	##        past_values -
+	##        target - who this move can target
+	##        super_contest_effect -
+	##        flavor_text_entries - flavor texts in various languages
+	##        damage_class -
+	##        meta -
+	getMove: (nameOrId, callback) ->
+		return @sendAPIRequest 'move', nameOrId, callback
 
-  #descrip: gets a single pokemon move
-  #params :
-  #returns: name - the resource name e.g. Water.
-  ##        id - the id of the resource.
-  ##        resource_uri - the uri of this resource.
-  ##        description - a description of the move.
-  ##        power - the power of the move.
-  ##        accuracy - the accuracy of the move.
-  ##        category - the category of the move.
-  ##        pp - the pp points of the move.
-  getMove: (id) ->
-    return @sendAPIrequest 'move', id
-  #descrip: gets multiple pokemon moves
-  #params : limit - the number of moves to get per call
-  getMoves: (limit=5) ->
-    return @sendAPIrequest 'move', false, {key: 'limit', val: limit}
+	#descrip: gets a single pokemon ability
+	#params :
+	#returns: name - the resource name e.g. Overgrow.
+	##        id - the id of the resource.
+	getAbility: (nameOrId, callback) ->
+		return @sendAPIRequest 'ability', nameOrId, callback
 
-  #descrip: gets a single pokemon ability
-  #params :
-  #returns: name - the resource name e.g. Overgrow.
-  ##        id - the id of the resource.
-  ##        resource_uri - the uri of this resource.
-  ##        description - the description of this ability
-  getAbility: (id) ->
-    return @sendAPIrequest 'ability', id
+	#descrip: gets an egg group
+	#params :
+	#returns: name - the resource name e.g. Monster.
+	##        id - the id of the resource.
+	getEggGroup: (nameOrId, callback) ->
+		return @sendAPIRequest 'egg', nameOrId, callback
 
-  #descrip: gets an egg group
-  #params :
-  #returns: name - the resource name e.g. Monster.
-  ##        id - the id of the resource.
-  ##        resource_uri - the uri of this resource.
-  ##        pokemon - a list of all the pokemon in that egg group.
-  getEggGroup: (id) ->
-    return @sendAPIrequest 'egg', id
+	#descrip: gets a pokemon's description
+	#params :
+	#returns: name - the resource name.
+	##        id - the id of the resource.
+	getDescription: (nameOrId, callback) ->
+		return @sendAPIRequest 'description', nameOrId, callback
 
-  #descrip: gets a pokemon's description
-  #params :
-  #returns: name - the resource name.
-  ##        id - the id of the resource.
-  ##        resource_uri - the uri of this resource.
-  ##        games - a list of games this description is in.
-  ##        pokemon - the pokemon this description is for.
-  getDescription: (id) ->
-    return @sendAPIrequest 'description', id
+	#descrip: gets a pokemon's sprite
+	#params :
+	#returns: name - the resource name.
+	##        id - the id of the resource.
+	getSprite: (nameOrId, callback) ->
+		return @sendAPIRequest 'sprite', nameOrId, callback
 
-  #descrip: gets a pokemon's sprite
-  #params :
-  #returns: name - the resource name.
-  ##        id - the id of the resource.
-  ##        resource_uri - the uri of this resource.
-  ##        pokemon - the pokemon this sprite is for.
-  ##        image - the uri for the sprite image
-  getSprite: (id) ->
-    return @sendAPIrequest 'sprite', id
-
-  #descrip: gets a pokemon game
-  #params :
-  #returns: name - the resource name e.g. Pokemon red.
-  ##        id - the id of the resource.
-  ##        resource_uri - the uri of this resource.
-  ##        release_year - the year the game was released
-  ##        generation - the generation this game belongs to.
-  getGame: (id) ->
-    return @sendAPIrequest 'game', id
+	#descrip: gets a pokemon game
+	#params :
+	#returns: name - the resource name e.g. Pokemon red.
+	##        id - the id of the resource.
+	getGame: (nameOrId) ->
+		return @sendAPIRequest 'game', nameOrId, callback
 
 module.exports = Pokemon

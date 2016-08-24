@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/dualmoon/joemon",
   "dependencies": {
-    "http-sync": "0.0.5"
+    "http-sync": "^0.1.2"
   }
 }
