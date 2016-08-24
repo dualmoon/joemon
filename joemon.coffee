@@ -15,7 +15,8 @@ class Pokemon
 			paramString = "?#{param.key}=#{param.val}"
 			if params.length > 0
 				paramString += "#{p.key}=#{p.val}" for p in params
-		Request "#{@host}/#{kind}/#{idString or ''}#{paramString or ''}", (error, response, body) ->
+		requestURI = "http://#{@host}/#{@basePath}/#{kind}/#{idString or ''}#{paramString or ''}"
+		Request requestURI, (error, response, body) ->
 			switch response.statusCode
 				when 404
 					throw "Invalid object Name or ID!"
