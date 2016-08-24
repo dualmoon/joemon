@@ -15,14 +15,13 @@ class Pokemon
 			paramString = "?#{param.key}=#{param.val}"
 			if params.length > 0
 				paramString += "#{p.key}=#{p.val}" for p in params
-		Request "#{@host}/#{kind}/#{idString or ''}#{paramString or ''}", (error, response, body) {
+		Request "#{@host}/#{kind}/#{idString or ''}#{paramString or ''}", (error, response, body) ->
 			switch response.statusCode
 				when 404
 					throw "Invalid object Name or ID!"
 				when 200
 					callback(response.statusCode,body)
-		}
-		
+
 	#descrip: get the entire pokedex
 	#params : none
 	#returns: name - the pokedex name e.g. National
