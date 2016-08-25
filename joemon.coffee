@@ -106,30 +106,41 @@ class Pokemon
 
 	#descrip: gets an egg group
 	#params :
-	#returns: name - the resource name e.g. Monster.
-	##        id - the id of the resource.
+	#returns: name - the resource name e.g. Monster
+	##        id - the id of the egg group
+	##        pokemon_species - pokemon in this egg group
+	##        names - localized names for this egg group
 	getEggGroup: (nameOrId, callback) ->
-		return @sendAPIRequest 'egg', nameOrId, callback
+		return @sendAPIRequest 'egg-group', nameOrId, callback
 
-	#descrip: gets a pokemon's description
-	#params :
-	#returns: name - the resource name.
-	##        id - the id of the resource.
-	getDescription: (nameOrId, callback) ->
-		return @sendAPIRequest 'description', nameOrId, callback
-
-	#descrip: gets a pokemon's sprite
-	#params :
-	#returns: name - the resource name.
-	##        id - the id of the resource.
-	getSprite: (nameOrId, callback) ->
-		return @sendAPIRequest 'sprite', nameOrId, callback
-
-	#descrip: gets a pokemon game
-	#params :
-	#returns: name - the resource name e.g. Pokemon red.
-	##        id - the id of the resource.
-	getGame: (nameOrId) ->
-		return @sendAPIRequest 'game', nameOrId, callback
-
+	#descrip: gets a pokemon's species information
+	#params : nameOrId - the species name or ID
+	##        callback - a callback
+	#returns: capture_rate -
+	##        habitat -
+	##        color
+	##        forms_switchable
+	##        shape
+	##        names
+	##        id
+	##        egg_groups
+	##        base_happiness
+	##        generation
+	##        flavor_text_entries
+	##        growth_rate
+	##        hatch_counter
+	##        genera
+	##        evolves_from_species
+	##        form_descriptions
+	##        varieties
+	##        name
+	##        evolution_chain
+	##        has_gender_differences
+	##        is_baby
+	##        gender_rate
+	##        pal_park_encounters
+	##        order
+	##        pokedex_numbers
+	getSpecies: (nameOrId, callback) ->
+		return @sendAPIRequest 'pokemon-species', nameOrId, callback
 module.exports = Pokemon
