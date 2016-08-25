@@ -143,4 +143,14 @@ class Pokemon
 	##        pokedex_numbers
 	getSpecies: (nameOrId, callback) ->
 		return @sendAPIRequest 'pokemon-species', nameOrId, callback
+
+	#descrip: gets a pokemon evolution chain
+	#params : id - the evolution chain ID
+	##        callback - a callback
+	#returns: id - the evolution id
+	##        baby_trigger_item
+	##        chain - the evolution chain
+	getEvoChain: (id, callback) ->
+		return @sendAPIRequest 'evolution-chain', id, callback
+
 module.exports = Pokemon
