@@ -5,7 +5,7 @@ Request = require 'request'
 class Pokemon
 	constructor: ->
 		@host = 'pokeapi.co'
-		@basePath = '/api/v2'
+		@basePath = 'api/v2'
 
 	#make the request and return the result
 	sendAPIRequest: (kind, nameOrId, callback, params...) ->
@@ -21,7 +21,7 @@ class Pokemon
 				when 404
 					throw "Invalid object Name or ID!"
 				when 200
-					callback(response.statusCode,body)
+					callback response.statusCode, JSON.parse(body)
 
 	#descrip: get the entire pokedex
 	#params : none
@@ -29,7 +29,7 @@ class Pokemon
 	##        id -
 	##        resource_uri - the uri of this resource
 	##        pokemon - a big list of pokemon within this pokedex
-	getPokedex: (nameOrId=1, callback) ->
+	getPokedex: (nameOrId, callback) ->
 		return @sendAPIRequest 'pokedex', nameOrId, callback
 
 	#descrip: gets a single pokemon by ID
@@ -94,6 +94,8 @@ class Pokemon
 	##        meta -
 	getMove: (nameOrId, callback) ->
 		return @sendAPIRequest 'move', nameOrId, callback
+	getMoves: (limit=20, callback) ->
+		return @sendAPIRequest 'move', false, callback, {key: 'limit', val: limit}
 
 	#descrip: gets a single pokemon ability
 	#params :
